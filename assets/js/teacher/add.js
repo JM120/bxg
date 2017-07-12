@@ -1,0 +1,55 @@
+require(['/bxg/assets/js/config.js'],function(){
+    require(['jquery','/bxg/assets/js/common.js','datepicker','validate','form','zh'],function($){
+        //日期插件初始化
+        $('input[name="tc_join_date"]').datepicker({
+            format:'yyyy/mm/dd',
+            language:'zh-CN'
+        })
+
+        //表单验证
+        $('form').validate({
+            rules:{
+                tc_name:{
+                    required:true,//不能为空
+                    rangelength:[2,10]//2到10个字符
+                },
+                tc_pass:{
+                    required:true,
+                    minlength:6//最小长度6位
+                },
+                tc_join_date:{
+                    required:true,
+                    date:true//必须是正确的日期格式
+                }
+            },
+            messages:{
+                tc_name:{
+                    required:'账号不能为空',
+                    rangelength:'账号在2到10个字符'
+                },
+                tc_pass:{
+                    required:'密码不能为空',
+                    minlength:'密码长度不能小于6位'
+                },
+                tc_join_date:{
+                    required:'不能为空',
+                    date:'格式不正确'
+                }
+            },
+            submitHandler:function(){
+                //验证通过才会执行这个方法
+                $('form').ajaxSubmit({
+                    url:'/api/v1/teacher/add',
+                    type:'post',
+                    suceess:function(info){
+
+                        console.log(info);
+                        if(info.code===200){
+                            alert('添加成功')
+                        }
+                    }
+                })
+            }
+        })
+    })
+})
